@@ -9,8 +9,8 @@ function mapRGB(value, currentMinimum, currentMaximum, startColor, endColor) {
 }
 
 function colorFalloff(coloredPoint, referencePoint) {
-  const feather = 0.1 // higher = fuzzier (undefined at 0)
-  const aperture = 1/8 // higher = wider
+  const feather = 1 // higher = fuzzier (undefined at 0)
+  const aperture = 3/5 // higher = wider
 
   // the farthest any hex can be from any point is to be in diagonally-opposed corners
   const maxDistance = pow(
@@ -27,6 +27,18 @@ function colorFalloff(coloredPoint, referencePoint) {
   return mapRGB(actualDistance, 0, maxDistance, coloredPoint.color, color('black'))
 }
 
+function blendRGBs(colors) {
+  let result = color(0, 0, 0)
+  for (i = 0; i < colors.length; i++) {
+    const newColor = colors[i]
+    const newRed = red(result) + red(newColor) / colors.length
+    const newGreen = green(result) + green(newColor) / colors.length
+    const newBlue = blue(result) + blue(newColor) / colors.length
+    result = color(newRed, newGreen, newBlue)
+  }
+  return result
+}
+
 class Hex {
   constructor(x, y, size, flipped) {
     this.x = x
@@ -40,19 +52,15 @@ class Hex {
 
   draw(points) {
     this.color = color(0, 0, 0)
+    const colors = [color(0, 0, 0)] // always blend with black for now?
+    const threshold = 1
     for (i = 0; i < points.length; i++) {
       const c = colorFalloff(points[i], this)
-
-      // TODO we could improve this blending to only incorporate colors with non-zero impact,
-      // because currently adding more points dims all of them
-      const newRed = red(this.color) + red(c) / points.length
-      const newGreen = green(this.color) + green(c) / points.length
-      const newBlue = blue(this.color) + blue(c) / points.length
-
-      this.color.setRed(newRed)
-      this.color.setGreen(newGreen)
-      this.color.setBlue(newBlue)
+      if (red(c) > threshold || green(c) > threshold || blue(c) > threshold) {
+        colors.push(c)
+      }
     }
+    this.color = blendRGBs(colors)
 
     const heightFactor = this.flipped ? 1 : sqrt(3) / 2
     const widthFactor = this.flipped ? sqrt(3) / 2 : 1
