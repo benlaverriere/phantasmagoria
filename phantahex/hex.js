@@ -27,7 +27,16 @@ function colorFalloff(coloredPoint, referencePoint) {
   return mapRGB(actualDistance, 0, maxDistance, coloredPoint.color, color('black'))
 }
 
-function blendRGBs(colors) {
+function blendRGBs(startingColors) {
+  const colors = [color(0, 0, 0)] // always blend with black for now?
+  const threshold = 1
+  for (i = 0; i < startingColors.length; i++) {
+    const c = startingColors[i]
+    if (red(c) > threshold || green(c) > threshold || blue(c) > threshold) {
+      colors.push(c)
+    }
+  }
+
   let result = color(0, 0, 0)
   for (i = 0; i < colors.length; i++) {
     const newColor = colors[i]
@@ -52,13 +61,10 @@ class Hex {
 
   draw(points) {
     this.color = color(0, 0, 0)
-    const colors = [color(0, 0, 0)] // always blend with black for now?
-    const threshold = 1
+    const colors = []
     for (i = 0; i < points.length; i++) {
       const c = colorFalloff(points[i], this)
-      if (red(c) > threshold || green(c) > threshold || blue(c) > threshold) {
-        colors.push(c)
-      }
+      colors.push(c)
     }
     this.color = blendRGBs(colors)
 
