@@ -1,32 +1,21 @@
 const DEBUG = false
 
-function colorFalloff(coloredPoint, referencePoint) {
-  const feather = 0.1 // higher = fuzzier (undefined at 0)
-  const aperture = 1/5 // higher = wider
+function mapRGB(value, currentMinimum, currentMaximum, startColor, endColor) {
+  const newRed = map( value, currentMinimum, currentMaximum, red(startColor), red(endColor))
+  const newGreen = map( value, currentMinimum, currentMaximum, green(startColor), green(endColor))
+  const newBlue = map( value, currentMinimum, currentMaximum, blue(startColor), blue(endColor))
 
-  const maxDist = pow(min(windowWidth, windowHeight) * aperture, 1 / feather)
-  const newRed = map(
-    pow(dist(referencePoint.x, referencePoint.y, coloredPoint.x, coloredPoint.y), 1 / feather),
-    0,
-    maxDist,
-    red(coloredPoint.color),
-    0
-  )
-  const newGreen = map(
-    pow(dist(referencePoint.x, referencePoint.y, coloredPoint.x, coloredPoint.y), 1 / feather),
-    0,
-    maxDist,
-    green(coloredPoint.color),
-    0
-  )
-  const newBlue = map(
-    pow(dist(referencePoint.x, referencePoint.y, coloredPoint.x, coloredPoint.y), 1 / feather),
-    0,
-    maxDist,
-    blue(coloredPoint.color),
-    0
-  )
   return color(newRed, newGreen, newBlue)
+}
+
+function colorFalloff(coloredPoint, referencePoint) {
+  const feather = 0.5 // higher = fuzzier (undefined at 0)
+  const aperture = 2/5 // higher = wider
+
+  const maxDistance = pow(min(windowWidth, windowHeight) * aperture, 1 / feather)
+  const actualDistance = pow(dist(referencePoint.x, referencePoint.y, coloredPoint.x, coloredPoint.y), 1 / feather)
+
+  return mapRGB(actualDistance, 0, maxDistance, coloredPoint.color, color('black'))
 }
 
 let POINT_COUNT
@@ -54,7 +43,7 @@ function setup() {
 function draw() {
   const hexSize = 50
   const hexCountX = windowWidth / hexSize / (2/3)
-  const hexCountY = windowHeight / hexSize
+  const hexCountY = windowHeight / hexSize + 1
 
   const hexes = []
 
