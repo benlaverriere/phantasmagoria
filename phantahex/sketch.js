@@ -39,6 +39,8 @@ function setup() {
     color(128, 0, 0),
     color(0, 256, 0),
     color(100, 100, 100),
+    color(240, 3, 252),
+    color(240, 3, 252),
     color(240, 3, 252)
   ]
   POINT_COUNT = colors.length
@@ -68,11 +70,6 @@ function draw() {
 
   background('black')
 
-  for (i = 0; i < POINT_COUNT ; i++) {
-    const p = points[i]
-    p.move()
-  }
-
   for (y = 0; y <= hexCountY; y++) {
     for (x = 0; x <= hexCountX; x++) {
       const h = hexes[y][x]
@@ -80,11 +77,10 @@ function draw() {
     }
   }
 
-  if (DEBUG) {
-    for (i = 0; i < POINT_COUNT ; i++) {
-      const p = points[i]
-      p.draw()
-    }
+  for (i = 0; i < POINT_COUNT ; i++) {
+    const p = points[i]
+    p.draw()
+    p.move()
   }
 }
 
