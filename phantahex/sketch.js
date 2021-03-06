@@ -1,24 +1,26 @@
 const DEBUG = false
 
 function colorFalloff(coloredPoint, referencePoint) {
-  const exp = 2
-  const maxDist = pow(min(windowWidth, windowHeight) / 2, exp)
+  const feather = 0.1 // higher = fuzzier (undefined at 0)
+  const aperture = 1/5 // higher = wider
+
+  const maxDist = pow(min(windowWidth, windowHeight) * aperture, 1 / feather)
   const newRed = map(
-    pow(dist(referencePoint.x, referencePoint.y, coloredPoint.x, coloredPoint.y), exp),
+    pow(dist(referencePoint.x, referencePoint.y, coloredPoint.x, coloredPoint.y), 1 / feather),
     0,
     maxDist,
     red(coloredPoint.color),
     0
   )
   const newGreen = map(
-    pow(dist(referencePoint.x, referencePoint.y, coloredPoint.x, coloredPoint.y), exp),
+    pow(dist(referencePoint.x, referencePoint.y, coloredPoint.x, coloredPoint.y), 1 / feather),
     0,
     maxDist,
     green(coloredPoint.color),
     0
   )
   const newBlue = map(
-    pow(dist(referencePoint.x, referencePoint.y, coloredPoint.x, coloredPoint.y), exp),
+    pow(dist(referencePoint.x, referencePoint.y, coloredPoint.x, coloredPoint.y), 1 / feather),
     0,
     maxDist,
     blue(coloredPoint.color),
@@ -27,9 +29,7 @@ function colorFalloff(coloredPoint, referencePoint) {
   return color(newRed, newGreen, newBlue)
 }
 
-const HEX_SIZE = 150
 let POINT_COUNT
-
 const points = []
 
 function setup() {
@@ -50,17 +50,18 @@ function setup() {
 }
 
 function draw() {
-  const HEXES_WIDE = windowWidth / HEX_SIZE / (2/3)
-  const HEXES_HIGH = windowHeight / HEX_SIZE
+  const hexSize = 50
+  const hexCountX = windowWidth / hexSize / (2/3)
+  const hexCountY = windowHeight / hexSize
 
   const hexes = []
 
-  for (y = 0; y <= HEXES_HIGH; y++) {
+  for (y = 0; y <= hexCountY; y++) {
     hexes[y] = []
-    for (x = 0; x <= HEXES_WIDE; x++) {
+    for (x = 0; x <= hexCountX; x++) {
       const flipped = true
-      const verticalOffset = (x % 2) * (HEX_SIZE / 2)
-      const h = new Hex(x * HEX_SIZE * (sqrt(3) / 2), y * HEX_SIZE + verticalOffset, HEX_SIZE, flipped)
+      const verticalOffset = (x % 2) * (hexSize / 2)
+      const h = new Hex(x * hexSize * (sqrt(3) / 2), y * hexSize + verticalOffset, hexSize, flipped)
       hexes[y].push(h)
     }
   }
@@ -72,8 +73,8 @@ function draw() {
     p.move()
   }
 
-  for (y = 0; y <= HEXES_HIGH; y++) {
-    for (x = 0; x <= HEXES_WIDE; x++) {
+  for (y = 0; y <= hexCountY; y++) {
+    for (x = 0; x <= hexCountX; x++) {
       const h = hexes[y][x]
       h.draw(points)
     }
