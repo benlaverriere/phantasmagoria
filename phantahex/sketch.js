@@ -1,11 +1,31 @@
 const DEBUG = false
 
-const MIN_RED = 20
-const MAX_RED = 128
-const MIN_GREEN = 0
-const MAX_GREEN = 10
-const MIN_BLUE = 0
-const MAX_BLUE = 128
+function colorFalloff(coloredPoint, referencePoint) {
+  const exp = 2
+  const maxDist = pow(min(windowWidth, windowHeight) / 2, exp)
+  const newRed = map(
+    pow(dist(referencePoint.x, referencePoint.y, coloredPoint.x, coloredPoint.y), exp),
+    0,
+    maxDist,
+    red(coloredPoint.color),
+    0
+  )
+  const newGreen = map(
+    pow(dist(referencePoint.x, referencePoint.y, coloredPoint.x, coloredPoint.y), exp),
+    0,
+    maxDist,
+    green(coloredPoint.color),
+    0
+  )
+  const newBlue = map(
+    pow(dist(referencePoint.x, referencePoint.y, coloredPoint.x, coloredPoint.y), exp),
+    0,
+    maxDist,
+    blue(coloredPoint.color),
+    0
+  )
+  return color(newRed, newGreen, newBlue)
+}
 
 class Hex {
   constructor(x, y, size, flipped) {
@@ -19,10 +39,13 @@ class Hex {
   }
 
   draw(points) {
-    const newRed = map(dist(this.x, this.y, points[0].x, points[0].y), 0, CANVAS_WIDTH, MIN_RED, MAX_RED)
-    const newGreen = map(dist(this.x, this.y, points[1].x, points[1].y), 0, CANVAS_WIDTH, MIN_GREEN, MAX_GREEN)
-    const newBlue = map(dist(this.x, this.y, points[2].x, points[2].y), 0, CANVAS_WIDTH, MIN_BLUE, MAX_BLUE)
-    this.color = color(newRed, newGreen, newBlue)
+    this.color = color(0, 0, 0)
+    for (i = 0; i < points.length; i++) {
+      const c = colorFalloff(points[i], this)
+      this.color.setRed(red(this.color) + red(c) / points.length)
+      this.color.setGreen(green(this.color) + green(c) / points.length)
+      this.color.setBlue(blue(this.color) + blue(c) / points.length)
+    }
 
     const heightFactor = this.flipped ? 1 : sqrt(3) / 2
     const widthFactor = this.flipped ? sqrt(3) / 2 : 1
@@ -82,15 +105,17 @@ class Hex {
 }
 
 class Point {
-  constructor(x, y) {
+  constructor(x, y, color) {
     this.x = x
     this.y = y
-    this.color = color('blue')
+    this.color = color
     this.radius = 5
   }
 
   move() {
     const speed = 10
+
+    // this seems to bias up and left, still
     const xinc = (noise(frameCount * 0.03, 0.720, this.x / 100) * 2 - 1) * speed
     const yinc = (noise(-frameCount * 0.04, 0.135, this.y / 100) * 2 - 1) * speed
     if (DEBUG) {
@@ -98,8 +123,8 @@ class Point {
     }
 
     // this clamping results in synchronized x and/or y values once the points hit an edge
-    this.x = max(min(this.x + xinc, CANVAS_WIDTH), 0)
-    this.y = max(min(this.y + yinc, CANVAS_HEIGHT), 0)
+    this.x = max(min(this.x + xinc, windowWidth), 0)
+    this.y = max(min(this.y + yinc, windowHeight), 0)
   }
 
   draw() {
@@ -111,23 +136,35 @@ class Point {
   }
 }
 
-const CANVAS_WIDTH = 800
-const CANVAS_HEIGHT = 400
-
-const POINT_COUNT = 3
-
-const HEX_SIZE = 20
-const HEXES_WIDE = CANVAS_WIDTH / HEX_SIZE / (2/3)
-const HEXES_HIGH = CANVAS_HEIGHT / HEX_SIZE
+const HEX_SIZE = 150
+let HEXES_WIDE
+let HEXES_HIGH
+let POINT_COUNT
 
 const points = []
-const hexes = []
 
 function setup() {
-  createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT)
-  for (i = 0; i < POINT_COUNT ; i++) {
-    points.push(new Point(random(0, CANVAS_WIDTH), random(0, CANVAS_HEIGHT)))
+  createCanvas(windowWidth, windowHeight)
+
+  const colors = [
+    color(128, 0, 0),
+    color(0, 256, 0),
+    color(100, 100, 100),
+    color(240, 3, 252)
+  ]
+  POINT_COUNT = colors.length
+
+  for (i = 0; i < POINT_COUNT; i++) {
+    points.push(new Point(random(0, windowWidth), random(0, windowHeight), colors[i]))
   }
+
+}
+
+function draw() {
+  HEXES_WIDE = windowWidth / HEX_SIZE / (2/3)
+  HEXES_HIGH = windowHeight / HEX_SIZE
+
+  const hexes = []
 
   for (y = 0; y <= HEXES_HIGH; y++) {
     hexes[y] = []
@@ -138,16 +175,14 @@ function setup() {
       hexes[y].push(h)
     }
   }
-}
 
-function draw() {
   background('black')
 
   for (i = 0; i < POINT_COUNT ; i++) {
     const p = points[i]
     p.move()
   }
-  
+
   for (y = 0; y <= HEXES_HIGH; y++) {
     for (x = 0; x <= HEXES_WIDE; x++) {
       const h = hexes[y][x]
@@ -161,5 +196,15 @@ function draw() {
       p.draw()
     }
   }
+}
 
+function mousePressed() {
+  if (mouseX > 0 && mouseX < windowWidth && mouseY > 0 && mouseY < windowHeight) {
+    const fs = fullscreen()
+    fullscreen(!fs)
+  }
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight)
 }
