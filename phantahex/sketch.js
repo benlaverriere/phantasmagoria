@@ -1,33 +1,5 @@
 const DEBUG = false
 
-function mapRGB(value, currentMinimum, currentMaximum, startColor, endColor) {
-  const newRed = map(value, currentMinimum, currentMaximum, red(startColor), red(endColor))
-  const newGreen = map(value, currentMinimum, currentMaximum, green(startColor), green(endColor))
-  const newBlue = map(value, currentMinimum, currentMaximum, blue(startColor), blue(endColor))
-
-  return color(newRed, newGreen, newBlue)
-}
-
-// TODO move to hex.js
-function colorFalloff(coloredPoint, referencePoint) {
-  const feather = 0.1 // higher = fuzzier (undefined at 0)
-  const aperture = 1/8 // higher = wider
-
-  // the farthest any hex can be from any point is to be in diagonally-opposed corners
-  const maxDistance = pow(
-    dist(0, 0, windowWidth, windowHeight) * aperture,
-    1 / feather
-  )
-
-  // without clamping to maxDistance, this can easily go to Infinity
-  const actualDistance = min(
-    maxDistance,
-    pow(dist(referencePoint.x, referencePoint.y, coloredPoint.x, coloredPoint.y), 1 / feather)
-  )
-
-  return mapRGB(actualDistance, 0, maxDistance, coloredPoint.color, color('black'))
-}
-
 let POINT_COUNT
 const points = []
 
