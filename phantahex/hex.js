@@ -29,7 +29,7 @@ function colorFalloff(coloredPoint, referencePoint) {
 
 function blendRGBs(startingColors) {
   const colors = [color(0, 0, 0)] // always blend with black for now?
-  const threshold = 1
+  const threshold = -1
   for (i = 0; i < startingColors.length; i++) {
     const c = startingColors[i]
     if (red(c) > threshold || green(c) > threshold || blue(c) > threshold) {
