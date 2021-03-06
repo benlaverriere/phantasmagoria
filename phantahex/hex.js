@@ -9,8 +9,8 @@ function mapRGB(value, currentMinimum, currentMaximum, startColor, endColor) {
 }
 
 function colorFalloff(coloredPoint, referencePoint) {
-  const feather = 1 // higher = fuzzier (undefined at 0)
-  const aperture = 3/5 // higher = wider
+  const feather = 4/9 // higher = fuzzier (undefined at 0)
+  const aperture = 2/5 // higher = wider
 
   // the farthest any hex can be from any point is to be in diagonally-opposed corners
   const maxDistance = pow(
@@ -28,7 +28,9 @@ function colorFalloff(coloredPoint, referencePoint) {
 }
 
 function blendRGBs(startingColors) {
-  const colors = [color(0, 0, 0)] // always blend with black for now?
+  // not using it for the moment, but here's an opportunity to munge the list of colors
+  // which contribute to the final resulting color
+  const colors = []
   const threshold = -1
   for (i = 0; i < startingColors.length; i++) {
     const c = startingColors[i]
