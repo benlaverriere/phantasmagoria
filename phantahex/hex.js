@@ -1,3 +1,5 @@
+const HEX_DEBUG_MODE = "color"
+
 class Hex {
   constructor(x, y, size, flipped) {
     this.x = x
@@ -13,9 +15,16 @@ class Hex {
     this.color = color(0, 0, 0)
     for (i = 0; i < points.length; i++) {
       const c = colorFalloff(points[i], this)
-      this.color.setRed(red(this.color) + red(c) / points.length)
-      this.color.setGreen(green(this.color) + green(c) / points.length)
-      this.color.setBlue(blue(this.color) + blue(c) / points.length)
+
+      // TODO we could improve this blending to only incorporate colors with non-zero impact,
+      // because currently adding more points dims all of them
+      const newRed = red(this.color) + red(c) / points.length
+      const newGreen = green(this.color) + green(c) / points.length
+      const newBlue = blue(this.color) + blue(c) / points.length
+
+      this.color.setRed(newRed)
+      this.color.setGreen(newGreen)
+      this.color.setBlue(newBlue)
     }
 
     const heightFactor = this.flipped ? 1 : sqrt(3) / 2
@@ -64,11 +73,21 @@ class Hex {
     endShape()
 
     if (DEBUG) {
-      noStroke()
-      fill('black')
-      textSize(10)
-      textAlign(CENTER, CENTER)
-      text(this.id, this.x, this.y)
+      push()
+      if (HEX_DEBUG_MODE == "position" || !HEX_DEBUG_MODE) {
+        noStroke()
+        fill('black')
+        textSize(10)
+        textAlign(CENTER, CENTER)
+        text(this.id, this.x, this.y)
+      } else if (HEX_DEBUG_MODE == "color") {
+        noStroke()
+        fill('lightgray')
+        textSize(10)
+        textAlign(CENTER, CENTER)
+        text(this.color, this.x, this.y)
+      }
+      pop()
     }
 
     pop()
