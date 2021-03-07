@@ -1,16 +1,21 @@
-const DEBUG = false
+const DEBUG = true
 
-let POINT_COUNT
-const points = []
+let points = []
 let hexes = []
+let colors
 const hexSize = 50
 let hexCountX
 let hexCountY
 
+let lastWindowWidth
+let lastWindowHeight
+
 function setup() {
   createCanvas(windowWidth, windowHeight)
+  lastWindowWidth = windowWidth
+  lastWindowHeight = windowHeight
 
-  const colors = [
+  colors = [
     new FColor(128, 0, 0),
     new FColor(0, 256, 0),
     new FColor(100, 100, 100),
@@ -18,12 +23,11 @@ function setup() {
     new FColor(240, 3, 252),
     new FColor(240, 3, 252)
   ]
-  POINT_COUNT = colors.length
 
-  for (i = 0; i < POINT_COUNT; i++) {
+  points = []
+  for (i = 0; i < colors.length; i++) {
     points.push(new Point(random(0, windowWidth), random(0, windowHeight), colors[i]))
   }
-
 }
 
 function draw() {
@@ -37,7 +41,7 @@ function draw() {
     }
   }
 
-  for (i = 0; i < POINT_COUNT ; i++) {
+  for (i = 0; i < points.length ; i++) {
     const p = points[i]
     p.draw()
     p.move()
@@ -62,8 +66,12 @@ function mousePressed() {
 }
 
 function windowResized() {
+  console.log("resizing")
   resizeCanvas(windowWidth, windowHeight)
   resizeHexes()
+  resizePoints()
+  lastWindowWidth = windowWidth
+  lastWindowHeight = windowHeight
 }
 
 function resizeHexes() {
@@ -78,5 +86,16 @@ function resizeHexes() {
       const h = new Hex(x * hexSize * (sqrt(3) / 2), y * hexSize + verticalOffset, hexSize)
       hexes[y].push(h)
     }
+  }
+}
+
+function resizePoints() {
+  for (i = 0; i < points.length; i++) {
+    const existing = points[i]
+    points[i] = new Point(
+      existing.x / lastWindowWidth * windowWidth,
+      existing.y / lastWindowHeight * windowHeight,
+      existing.color
+    )
   }
 }

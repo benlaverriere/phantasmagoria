@@ -1,4 +1,4 @@
-const POINT_DEBUG_MODE = "none"
+const POINT_DEBUG_MODE = "draw"
 const MovementMode = {
   HARD_WALLS: 0,
   WRAP: 1,
@@ -15,7 +15,7 @@ class Point {
   }
 
   move() {
-    const speed = 10
+    const speed = 5
     const mode = MovementMode.WRAP_WITH_MARGIN
 
     const xnoise = noise(frameCount * (0.03 + this.seed))
