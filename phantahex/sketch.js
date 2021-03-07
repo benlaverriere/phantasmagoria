@@ -28,10 +28,11 @@ function setup() {
   for (i = 0; i < colors.length; i++) {
     points.push(new Point(random(0, windowWidth), random(0, windowHeight), colors[i]))
   }
+
+  resizeHexes()
 }
 
 function draw() {
-  resizeHexes()
   background('black')
 
   for (y = 0; y <= hexCountY; y++) {
