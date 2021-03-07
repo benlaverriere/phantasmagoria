@@ -61,9 +61,39 @@ function blendRGBs(startingColors) {
   let result = config.hexColor;
   for (i = 0; i < colors.length; i++) {
     const newColor = colors[i];
-    const newRed = result.r + newColor.r;
-    const newGreen = result.g + newColor.g;
-    const newBlue = result.b + newColor.b;
+    let newRed, newGreen, newBlue;
+
+    switch (config.blendMode) {
+      case BlendMode.MODULO: {
+        newRed = (result.r + newColor.r) % 256;
+        newGreen = (result.g + newColor.g) % 256;
+        newBlue = (result.b + newColor.b) % 256;
+        break;
+      }
+      case BlendMode.FRACTIONAL: {
+        newRed = (result.r + newColor.r) / colors.length;
+        newGreen = (result.g + newColor.g) / colors.length;
+        newBlue = (result.b + newColor.b) / colors.length;
+        break;
+      }
+      case BlendMode.BIASED_ADD: {
+        newRed =
+          result.r + newColor.r + config.biasColor.r * (newColor.r / 256);
+        newGreen =
+          result.g + newColor.g + config.biasColor.g * (newColor.g / 256);
+        newBlue =
+          result.b + newColor.b + config.biasColor.b * (newColor.b / 256);
+        break;
+      }
+      case BlendMode.ADD:
+      default: {
+        newRed = result.r + newColor.r;
+        newGreen = result.g + newColor.g;
+        newBlue = result.b + newColor.b;
+        break;
+      }
+    }
+
     result = new FColor(newRed, newGreen, newBlue);
   }
   return result;

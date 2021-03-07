@@ -78,6 +78,11 @@ class Point {
         this.x < windowWidth &&
         this.y < windowHeight
       ) {
+        push();
+        fill(config.background);
+        circle(this.x, this.y, this.radius + 1);
+        pop();
+
         circle(this.x, this.y, this.radius);
       }
       pop();

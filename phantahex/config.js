@@ -1,3 +1,10 @@
+const BlendMode = {
+  ADD: 0,
+  MODULO: 1,
+  FRACTIONAL: 2,
+  BIASED_ADD: 3,
+};
+
 const MovementMode = {
   HARD_WALLS: 0,
   WRAP: 1,
@@ -20,6 +27,8 @@ class Config {
   constructor({
     aperture,
     background,
+    biasColor,
+    blendMode,
     colors,
     feather,
     hexColor,
@@ -31,6 +40,8 @@ class Config {
 
     this.background = parseBackground(background ?? new FColor(0, 0, 0));
 
+    this.biasColor = biasColor ?? new FColor(0, 0, 0);
+    this.blendMode = blendMode ?? BlendMode.ADD;
     this.colors = colors ?? [];
     this.feather = feather ?? 0.1; // higher = fuzzier (undefined at 0)
     this.hexColor = hexColor ?? new FColor(0, 0, 0);

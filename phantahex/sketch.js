@@ -44,8 +44,39 @@ const blueConfig = new Config({
   aperture: 0.05,
   feather: 2,
 });
+const modConfig = new Config({
+  background: new FColor(0, 0, 0),
+  blendMode: BlendMode.MODULO,
+  movementMode: MovementMode.WRAP,
+  colors: [
+    new FColor(255, 0, 0),
+    new FColor(0, 255, 0),
+    new FColor(0, 0, 255),
+    new FColor(255, 255, 0),
+    new FColor(255, 0, 255),
+    new FColor(0, 255, 255),
+  ],
+  hexSize: 150,
+  aperture: 0.1,
+  feather: 1,
+});
+const grayConfig = new Config({
+  background: new FColor(0, 0, 0),
+  blendMode: BlendMode.BIASED_ADD,
+  biasColor: new FColor(128, 50, 0),
+  movementMode: MovementMode.WRAP_WITH_MARGIN,
+  colors: [
+    new FColor(255, 255, 255),
+    new FColor(255, 255, 255),
+    new FColor(255, 255, 255),
+    new FColor(255, 255, 255),
+  ],
+  hexSize: 150,
+  aperture: 0.1,
+  feather: 1,
+});
 
-const config = blueConfig;
+const config = grayConfig;
 
 let points = [];
 let hexes = [];
