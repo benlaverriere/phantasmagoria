@@ -1,4 +1,4 @@
-const HEX_DEBUG_MODE = "color"
+const HEX_DEBUG_MODE = "invisible"
 
 function mapRGB(value, currentMinimum, currentMaximum, startColor, endColor) {
   const newRed = map(value, currentMinimum, currentMaximum, red(startColor), red(endColor))
@@ -105,19 +105,22 @@ class Hex {
     ];
     const vertices = this.flipped ? verticesFlipped : verticesRegular; 
 
-    push()
-    noStroke()
-    fill(this.color)
-    beginShape()
-    for (i = 0; i < vertices.length; i++) {
-      const v = vertices[i]
-      vertex(v.x, v.y)
+    if (!(DEBUG && HEX_DEBUG_MODE == "invisible")) {
+      push()
+      noStroke()
+      fill(this.color)
+      beginShape()
+      for (i = 0; i < vertices.length; i++) {
+        const v = vertices[i]
+        vertex(v.x, v.y)
+      }
+      endShape()
+      pop()
     }
-    endShape()
 
     if (DEBUG) {
       push()
-      if (HEX_DEBUG_MODE == "position" || !HEX_DEBUG_MODE) {
+      if (HEX_DEBUG_MODE == "position") {
         noStroke()
         fill('black')
         textSize(10)
@@ -132,7 +135,5 @@ class Hex {
       }
       pop()
     }
-
-    pop()
   }
 }

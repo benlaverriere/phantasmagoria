@@ -15,9 +15,8 @@ class Point {
 
   move() {
     const speed = 10
-    const mode = MovementMode.WRAP
+    const mode = MovementMode.WRAP_WITH_MARGIN
 
-    // this seems to bias up and left, still
     const xnoise = noise(frameCount * (0.03 + this.seed))
     const ynoise = noise(frameCount * (0.04 + this.seed))
     const xinc = map(xnoise, 0, 1, -speed, speed)
@@ -28,14 +27,21 @@ class Point {
 
     switch(mode) {
       case (MovementMode.WRAP): {
-        // TODO doesn't work when we wrap in the negative direction
-        this.x = (this.x + xinc) % (windowWidth)
-        this.y = (this.y + yinc) % (windowHeight)
+        this.x = (windowWidth + this.x + xinc) % windowWidth
+        this.y = (windowHeight + this.y + yinc) % windowHeight
         break;
       }
       case (MovementMode.WRAP_WITH_MARGIN): {
-        this.x = (- windowWidth / 2) + (this.x + xinc) % (windowWidth / 2)
-        this.y = (- windowHeight / 2) + (this.y + yinc) % (windowHeight / 2)
+        const wrapWidth = windowWidth * 2
+        const wrapHeight = windowHeight * 2
+        const xOffset = (wrapWidth - windowWidth) / 2
+        const yOffset = (wrapHeight - windowHeight) / 2
+
+        this.x = ((wrapWidth + this.x + xinc + xOffset) % wrapWidth) - xOffset
+        this.y = ((wrapHeight + this.y + yinc + yOffset) % wrapHeight) - yOffset
+        if (DEBUG) {
+          console.log(round(this.x), round(this.y), '[', xOffset, yOffset, ']')
+        }
         break;
       }
       case (MovementMode.HARD_WALLS):
