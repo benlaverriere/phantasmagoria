@@ -9,8 +9,8 @@ function mapRGBToBlack(value, currentMinimum, currentMaximum, startColor) {
 }
 
 function colorFalloff(coloredPoint, referencePoint) {
-  const feather = 4 / 9; // higher = fuzzier (undefined at 0)
-  const aperture = 2 / 5; // higher = wider
+  const feather = 2 / 9; // higher = fuzzier (undefined at 0)
+  const aperture = 1 / 5; // higher = wider
   const aperturePower = 1 / (feather * 2); // aka (feather * 2)th root of squared distance
 
   // the farthest any hex can be from any point is to be in diagonally-opposed corners
