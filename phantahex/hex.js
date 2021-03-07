@@ -14,17 +14,17 @@ function colorFalloff(coloredPoint, referencePoint) {
 
   // the farthest any hex can be from any point is to be in diagonally-opposed corners
   const maxDistance = pow(
-    (windowWidth * windowWidth + windowHeight * windowHeight) * aperture,
-    feather / 2 // aka (feather * 2)th root of squared distance
+    (windowWidth * windowWidth + windowHeight * windowHeight) * aperture * aperture,
+    1 / (feather * 2) // aka (feather * 2)th root of squared distance
   )
 
-  // without clamping to maxDistance, this can easily go to Infinity
+  // without clamping to maxDistance, this can easily go to Infinity...or at least it doesn't look as pretty
   const actualDistance = min(
     maxDistance,
     pow(
       (coloredPoint.x - referencePoint.x) * (coloredPoint.x - referencePoint.x) +
       (coloredPoint.y - referencePoint.y) * (coloredPoint.y - referencePoint.y),
-      feather / 2
+      1 / (2 * feather)
     )
   )
 
@@ -55,10 +55,9 @@ function blendRGBs(startingColors) {
 }
 
 class Hex {
-  constructor(x, y, size, flipped) {
+  constructor(x, y, size) {
     this.x = x
     this.y = y
-    this.flipped = flipped
     this.radius = size / 2
 
     this.color = new FColor(0, 0, 0)

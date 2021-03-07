@@ -74,9 +74,8 @@ function resizeHexes() {
   for (y = 0; y <= hexCountY; y++) {
     hexes[y] = []
     for (x = 0; x <= hexCountX; x++) {
-      const flipped = true
       const verticalOffset = (x % 2) * (hexSize / 2)
-      const h = new Hex(x * hexSize * (sqrt(3) / 2), y * hexSize + verticalOffset, hexSize, flipped)
+      const h = new Hex(x * hexSize * (sqrt(3) / 2), y * hexSize + verticalOffset, hexSize)
       hexes[y].push(h)
     }
   }
