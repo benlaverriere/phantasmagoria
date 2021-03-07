@@ -13,8 +13,8 @@ function colorFalloff(coloredPoint, referencePoint) {
   const aperture = 2/5 // higher = wider
 
   // the farthest any hex can be from any point is to be in diagonally-opposed corners
-  const maxDistance = aperture * pow(
-    windowWidth * windowWidth + windowHeight * windowHeight,
+  const maxDistance = pow(
+    (windowWidth * windowWidth + windowHeight * windowHeight) * aperture,
     feather / 2 // aka (feather * 2)th root of squared distance
   )
 
