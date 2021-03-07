@@ -1,5 +1,7 @@
 const POINT_DEBUG_MODE = "draw";
 
+// TODO could be interesting to try a different approach to falloff, where points have defined radii. That way we can
+// explicitly know when they're offscreen rather than guessing with very large margins, etc.
 class Point {
   constructor(x, y, color) {
     this.x = x;
@@ -49,8 +51,17 @@ class Point {
       }
       case MovementMode.HARD_WALLS:
       default: {
-        this.x = max(min(this.x + xinc, windowWidth), 0);
-        this.y = max(min(this.y + yinc, windowHeight), 0);
+        const newX = this.x + xinc;
+        const newY = this.y + yinc;
+        if (newX < 0 || newX > windowWidth) {
+          this.xdrift *= -1;
+        }
+        if (newY < 0 || newY > windowHeight) {
+          this.ydrift *= -1;
+        }
+
+        this.x = max(min(newX, windowWidth), 0);
+        this.y = max(min(newY, windowHeight), 0);
         break;
       }
     }

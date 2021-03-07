@@ -1,5 +1,6 @@
 const DEBUG = false;
-const config = new Config({
+
+const firstConfig = new Config({
   aperture: 1 / 5,
   background: "black",
   colors: [
@@ -16,6 +17,22 @@ const config = new Config({
   movementMode: MovementMode.WRAP_WITH_MARGIN,
   pointSpreadFactors: { x: 1, y: 1 },
 });
+const bounceConfig = new Config({
+  aperture: 2 / 20,
+  background: new FColor(0, 0, 0),
+  colors: [
+    new FColor(60, 237, 57),
+    new FColor(240, 3, 252),
+    new FColor(255, 94, 0),
+    new FColor(7, 60, 235),
+  ],
+  feather: 3 / 9,
+  hexColor: new FColor(5, 5, 5),
+  hexSize: 80,
+  movementMode: MovementMode.HARD_WALLS,
+  pointSpreadFactors: { x: 1, y: 1 },
+});
+const config = bounceConfig;
 
 let points = [];
 let hexes = [];
