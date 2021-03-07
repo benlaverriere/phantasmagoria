@@ -3,7 +3,10 @@ const DEBUG = false;
 let points = [];
 let hexes = [];
 let colors;
-const hexSize = 80;
+
+// TODO when hexes get large, wrapping gets jerky
+const hexSize = 50;
+
 let hexCountX;
 let hexCountY;
 
@@ -24,12 +27,16 @@ function setup() {
     new FColor(240, 3, 252),
   ];
 
+  const spreadFactorX = 1;
+  const spreadFactorY = 1;
+  const initialSpreadX = (spreadFactorX * windowWidth) / 2;
+  const initialSpreadY = (spreadFactorY * windowHeight) / 2;
   points = [];
   for (i = 0; i < colors.length; i++) {
     points.push(
       new Point(
-        random(-windowWidth, 2 * windowWidth),
-        random(-windowHeight, 2 * windowHeight),
+        initialSpreadX + random(-initialSpreadX, initialSpreadX),
+        initialSpreadY + random(-initialSpreadY, initialSpreadY),
         colors[i]
       )
     );
