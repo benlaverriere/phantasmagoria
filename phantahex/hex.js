@@ -1,21 +1,37 @@
 const HEX_DEBUG_MODE = "none";
 
-function mapRGBToBlack(value, currentMinimum, currentMaximum, startColor) {
-  const newRed = map(value, currentMinimum, currentMaximum, startColor.r, 0);
-  const newGreen = map(value, currentMinimum, currentMaximum, startColor.g, 0);
-  const newBlue = map(value, currentMinimum, currentMaximum, startColor.b, 0);
+function mapRGBToBackground(value, currentMinimum, currentMaximum, startColor) {
+  const newRed = map(
+    value,
+    currentMinimum,
+    currentMaximum,
+    startColor.r,
+    config.hexColor.r
+  );
+  const newGreen = map(
+    value,
+    currentMinimum,
+    currentMaximum,
+    startColor.g,
+    config.hexColor.g
+  );
+  const newBlue = map(
+    value,
+    currentMinimum,
+    currentMaximum,
+    startColor.b,
+    config.hexColor.b
+  );
 
   return new FColor(newRed, newGreen, newBlue);
 }
 
 function colorFalloff(coloredPoint, referencePoint) {
-  const feather = 2 / 9; // higher = fuzzier (undefined at 0)
-  const aperture = 1 / 5; // higher = wider
-  const aperturePower = 1 / (feather * 2); // aka (feather * 2)th root of squared distance
+  const aperturePower = 1 / (config.feather * 2); // aka (feather * 2)th root of squared distance
 
   // the farthest any hex can be from any point is to be in diagonally-opposed corners
   const maxDistance = pow(
-    (windowWidth * windowWidth + windowHeight * windowHeight) * aperture,
+    (windowWidth * windowWidth + windowHeight * windowHeight) * config.aperture,
     aperturePower
   );
 
@@ -27,7 +43,7 @@ function colorFalloff(coloredPoint, referencePoint) {
     pow(xdist * xdist + ydist * ydist, aperturePower)
   );
 
-  return mapRGBToBlack(actualDistance, 0, maxDistance, coloredPoint.color);
+  return mapRGBToBackground(actualDistance, 0, maxDistance, coloredPoint.color);
 }
 
 function blendRGBs(startingColors) {
@@ -42,7 +58,7 @@ function blendRGBs(startingColors) {
   //   }
   // }
 
-  let result = new FColor(0, 0, 0);
+  let result = config.hexColor;
   for (i = 0; i < colors.length; i++) {
     const newColor = colors[i];
     const newRed = result.r + newColor.r / colors.length;
@@ -59,7 +75,7 @@ class Hex {
     this.y = y;
     this.radius = size / 2;
 
-    this.color = new FColor(0, 0, 0);
+    this.color = config.hexColor;
     this.id = `(${round(this.x)},${round(this.y)})`;
 
     const heightFactor = 1;

@@ -1,11 +1,25 @@
 const DEBUG = false;
+const config = new Config({
+  aperture: 1 / 5,
+  background: "black",
+  colors: [
+    new FColor(128, 0, 0),
+    new FColor(0, 256, 0),
+    new FColor(100, 100, 100),
+    new FColor(240, 3, 252),
+    new FColor(240, 3, 252),
+    new FColor(240, 3, 252),
+  ],
+  feather: 2 / 9,
+  hexColor: new FColor(0, 10, 0),
+  hexSize: 50,
+  movementMode: MovementMode.WRAP_WITH_MARGIN,
+  pointSpreadFactors: { x: 1, y: 1 },
+});
 
 let points = [];
 let hexes = [];
 let colors;
-
-// TODO when hexes get large, wrapping gets jerky
-const hexSize = 50;
 
 let hexCountX;
 let hexCountY;
@@ -18,26 +32,15 @@ function setup() {
   lastWindowWidth = windowWidth;
   lastWindowHeight = windowHeight;
 
-  colors = [
-    new FColor(128, 0, 0),
-    new FColor(0, 256, 0),
-    new FColor(100, 100, 100),
-    new FColor(240, 3, 252),
-    new FColor(240, 3, 252),
-    new FColor(240, 3, 252),
-  ];
-
-  const spreadFactorX = 1;
-  const spreadFactorY = 1;
-  const initialSpreadX = (spreadFactorX * windowWidth) / 2;
-  const initialSpreadY = (spreadFactorY * windowHeight) / 2;
+  const initialSpreadX = (config.pointSpreadFactors.x * windowWidth) / 2;
+  const initialSpreadY = (config.pointSpreadFactors.y * windowHeight) / 2;
   points = [];
-  for (i = 0; i < colors.length; i++) {
+  for (i = 0; i < config.colors.length; i++) {
     points.push(
       new Point(
         initialSpreadX + random(-initialSpreadX, initialSpreadX),
         initialSpreadY + random(-initialSpreadY, initialSpreadY),
-        colors[i]
+        config.colors[i]
       )
     );
   }
@@ -46,7 +49,7 @@ function setup() {
 }
 
 function draw() {
-  background("black");
+  background(config.background);
 
   for (y = 0; y <= hexCountY; y++) {
     for (x = 0; x <= hexCountX; x++) {
@@ -85,7 +88,6 @@ function mousePressed() {
 }
 
 function windowResized() {
-  console.log("resizing");
   resizeCanvas(windowWidth, windowHeight);
   resizeHexes();
   resizePoints();
@@ -94,18 +96,18 @@ function windowResized() {
 }
 
 function resizeHexes() {
-  hexCountX = windowWidth / hexSize / (2 / 3);
-  hexCountY = windowHeight / hexSize + 1;
+  hexCountX = windowWidth / config.hexSize / (2 / 3);
+  hexCountY = windowHeight / config.hexSize + 1;
 
   hexes = [];
   for (y = 0; y <= hexCountY; y++) {
     hexes[y] = [];
     for (x = 0; x <= hexCountX; x++) {
-      const verticalOffset = (x % 2) * (hexSize / 2);
+      const verticalOffset = (x % 2) * (config.hexSize / 2);
       const h = new Hex(
-        x * hexSize * (sqrt(3) / 2),
-        y * hexSize + verticalOffset,
-        hexSize
+        x * config.hexSize * (sqrt(3) / 2),
+        y * config.hexSize + verticalOffset,
+        config.hexSize
       );
       hexes[y].push(h);
     }

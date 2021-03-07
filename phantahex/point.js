@@ -1,9 +1,4 @@
 const POINT_DEBUG_MODE = "draw";
-const MovementMode = {
-  HARD_WALLS: 0,
-  WRAP: 1,
-  WRAP_WITH_MARGIN: 2,
-};
 
 class Point {
   constructor(x, y, color) {
@@ -19,8 +14,6 @@ class Point {
   }
 
   move() {
-    const mode = MovementMode.WRAP_WITH_MARGIN;
-
     const xnoise = noise(frameCount * (0.03 + this.seed));
     const ynoise = noise(frameCount * (0.04 + this.seed));
     const xinc =
@@ -32,7 +25,7 @@ class Point {
       console.log(round(xinc), round(yinc));
     }
 
-    switch (mode) {
+    switch (config.movementMode) {
       case MovementMode.WRAP: {
         this.x = (windowWidth + this.x + xinc) % windowWidth;
         this.y = (windowHeight + this.y + yinc) % windowHeight;
