@@ -4,16 +4,16 @@
 // a raw array with indices.
 class FColor {
   constructor(r, g, b) {
-    this.r = r
-    this.g = g
-    this.b = b
+    this.r = r;
+    this.g = g;
+    this.b = b;
   }
-  
+
   toString() {
-    return `(${this.r}, ${this.g}, ${this.b})`
+    return `(${this.r}, ${this.g}, ${this.b})`;
   }
 
   p5() {
-    return color(this.r, this.g, this.b)
+    return color(this.r, this.g, this.b);
   }
 }
