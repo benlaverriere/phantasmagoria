@@ -1,3 +1,4 @@
+const POINT_DEBUG_MODE = "none"
 const MovementMode = {
   HARD_WALLS: 0,
   WRAP: 1,
@@ -21,7 +22,7 @@ class Point {
     const ynoise = noise(frameCount * (0.04 + this.seed))
     const xinc = map(xnoise, 0, 1, -speed, speed)
     const yinc = map(ynoise, 0, 1, -speed, speed)
-    if (DEBUG) {
+    if (DEBUG && POINT_DEBUG_MODE === "increment") {
       console.log(round(xinc), round(yinc))
     }
 
@@ -39,7 +40,7 @@ class Point {
 
         this.x = ((wrapWidth + this.x + xinc + xOffset) % wrapWidth) - xOffset
         this.y = ((wrapHeight + this.y + yinc + yOffset) % wrapHeight) - yOffset
-        if (DEBUG) {
+        if (DEBUG && POINT_DEBUG_MODE === "position") {
           console.log(round(this.x), round(this.y), '[', xOffset, yOffset, ']')
         }
         break;
