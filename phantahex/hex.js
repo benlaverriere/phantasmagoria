@@ -20,16 +20,12 @@ function colorFalloff(coloredPoint, referencePoint) {
     1 / (feather * 2) // aka (feather * 2)th root of squared distance
   );
 
+  const xdist = coloredPoint.x - referencePoint.x;
+  const ydist = coloredPoint.y - referencePoint.y;
   // without clamping to maxDistance, this can easily go to Infinity...or at least it doesn't look as pretty
   const actualDistance = min(
     maxDistance,
-    pow(
-      (coloredPoint.x - referencePoint.x) *
-        (coloredPoint.x - referencePoint.x) +
-        (coloredPoint.y - referencePoint.y) *
-          (coloredPoint.y - referencePoint.y),
-      1 / (2 * feather)
-    )
+    pow(xdist * xdist + ydist * ydist, 1 / (2 * feather))
   );
 
   return mapRGBToBlack(actualDistance, 0, maxDistance, coloredPoint.color);
