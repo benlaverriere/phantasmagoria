@@ -1,9 +1,9 @@
-const DEBUG = true
+const DEBUG = false
 
 let points = []
 let hexes = []
 let colors
-const hexSize = 50
+const hexSize = 80
 let hexCountX
 let hexCountY
 
@@ -26,7 +26,7 @@ function setup() {
 
   points = []
   for (i = 0; i < colors.length; i++) {
-    points.push(new Point(random(0, windowWidth), random(0, windowHeight), colors[i]))
+    points.push(new Point(random(-windowWidth, 2 * windowWidth), random(-windowHeight, 2 * windowHeight), colors[i]))
   }
 
   resizeHexes()

@@ -12,16 +12,20 @@ class Point {
     this.color = color
     this.radius = 5
     this.seed = random(0,0.1)
+
+    this.jitterScale = random(3, 10)
+    this.xdrift = random(-2, 2)
+    this.ydrift = random(4, -4)
   }
 
   move() {
-    const speed = 5
     const mode = MovementMode.WRAP_WITH_MARGIN
 
     const xnoise = noise(frameCount * (0.03 + this.seed))
     const ynoise = noise(frameCount * (0.04 + this.seed))
-    const xinc = map(xnoise, 0, 1, -speed, speed)
-    const yinc = map(ynoise, 0, 1, -speed, speed)
+    const xinc = map(xnoise, 0, 1, -this.jitterScale, this.jitterScale) + this.xdrift
+    const yinc = map(ynoise, 0, 1, -this.jitterScale, this.jitterScale) + this.ydrift
+
     if (DEBUG && POINT_DEBUG_MODE === "increment") {
       console.log(round(xinc), round(yinc))
     }
@@ -33,10 +37,12 @@ class Point {
         break;
       }
       case (MovementMode.WRAP_WITH_MARGIN): {
-        const wrapWidth = windowWidth * 2
-        const wrapHeight = windowHeight * 2
-        const xOffset = (wrapWidth - windowWidth) / 2
-        const yOffset = (wrapHeight - windowHeight) / 2
+        // TODO it would be great to have a *second* copy of each point, offset by one window unit
+        const marginFactor = 3
+        const wrapWidth = windowWidth * marginFactor
+        const wrapHeight = windowHeight * marginFactor
+        const xOffset = (wrapWidth - windowWidth) / marginFactor
+        const yOffset = (wrapHeight - windowHeight) / marginFactor
 
         this.x = ((wrapWidth + this.x + xinc + xOffset) % wrapWidth) - xOffset
         this.y = ((wrapHeight + this.y + yinc + yOffset) % wrapHeight) - yOffset
