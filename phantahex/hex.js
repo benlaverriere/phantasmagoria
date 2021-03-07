@@ -1,11 +1,11 @@
 const HEX_DEBUG_MODE = "none"
 
 function mapRGBToBlack(value, currentMinimum, currentMaximum, startColor) {
-  const newRed = map(value, currentMinimum, currentMaximum, red(startColor), 0)
-  const newGreen = map(value, currentMinimum, currentMaximum, green(startColor), 0)
-  const newBlue = map(value, currentMinimum, currentMaximum, blue(startColor), 0)
+  const newRed = map(value, currentMinimum, currentMaximum, startColor.r, 0)
+  const newGreen = map(value, currentMinimum, currentMaximum, startColor.g, 0)
+  const newBlue = map(value, currentMinimum, currentMaximum, startColor.b, 0)
 
-  return color(newRed, newGreen, newBlue)
+  return new FColor(newRed, newGreen, newBlue)
 }
 
 function colorFalloff(coloredPoint, referencePoint) {
@@ -43,13 +43,13 @@ function blendRGBs(startingColors) {
   //   }
   // }
 
-  let result = color(0, 0, 0)
+  let result = new FColor(0, 0, 0)
   for (i = 0; i < colors.length; i++) {
     const newColor = colors[i]
-    const newRed = red(result) + red(newColor) / colors.length
-    const newGreen = green(result) + green(newColor) / colors.length
-    const newBlue = blue(result) + blue(newColor) / colors.length
-    result = color(newRed, newGreen, newBlue)
+    const newRed = result.r + newColor.r / colors.length
+    const newGreen = result.g + newColor.g / colors.length
+    const newBlue = result.b + newColor.b / colors.length
+    result = new FColor(newRed, newGreen, newBlue)
   }
   return result
 }
@@ -61,7 +61,7 @@ class Hex {
     this.flipped = flipped
     this.radius = size / 2
 
-    this.color = color(random(128), 0, random(128))
+    this.color = new FColor(0, 0, 0)
     this.id = `(${round(this.x)},${round(this.y)})`
 
     const heightFactor = 1
@@ -88,7 +88,7 @@ class Hex {
   }
 
   draw(points) {
-    this.color = color(0, 0, 0)
+    this.color = new FColor(0, 0, 0)
     const colors = []
     for (i = 0; i < points.length; i++) {
       const c = colorFalloff(points[i], this)
@@ -99,7 +99,7 @@ class Hex {
     if (!(DEBUG && HEX_DEBUG_MODE === "invisible")) {
       push()
       noStroke()
-      fill(this.color)
+      fill(this.color.p5())
       beginShape()
       for (i = 0; i < this.vertices.length; i++) {
         const v = this.vertices[i]
@@ -122,7 +122,7 @@ class Hex {
         fill('lightgray')
         textSize(10)
         textAlign(CENTER, CENTER)
-        text(this.color, this.x, this.y)
+        text(this.color.toString(), this.x, this.y)
       }
       pop()
     }

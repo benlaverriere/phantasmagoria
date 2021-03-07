@@ -1,4 +1,4 @@
-const DEBUG = true
+const DEBUG = false
 
 let POINT_COUNT
 const points = []
@@ -11,12 +11,12 @@ function setup() {
   createCanvas(windowWidth, windowHeight)
 
   const colors = [
-    color(128, 0, 0),
-    color(0, 256, 0),
-    color(100, 100, 100),
-    color(240, 3, 252),
-    color(240, 3, 252),
-    color(240, 3, 252)
+    new FColor(128, 0, 0),
+    new FColor(0, 256, 0),
+    new FColor(100, 100, 100),
+    new FColor(240, 3, 252),
+    new FColor(240, 3, 252),
+    new FColor(240, 3, 252)
   ]
   POINT_COUNT = colors.length
 

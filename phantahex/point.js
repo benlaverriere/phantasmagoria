@@ -55,10 +55,10 @@ class Point {
   }
 
   draw() {
-    if (DEBUG) {
+    if (DEBUG && POINT_DEBUG_MODE !== "none") {
       push()
       noStroke()
-      fill(this.color)
+      fill(this.color.p5())
       if (this.x > 0 && this.y > 0 && this.x < windowWidth && this.y < windowHeight) {
         circle(this.x, this.y, this.radius)
       }
