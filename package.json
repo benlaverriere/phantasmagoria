@@ -1,0 +1,10 @@
+{
+  "name": "phantasmagoria",
+  "version": "1.0.0",
+  "main": "index.html",
+  "author": "Ben LaVerriere",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "2.2.1"
+  }
+}
