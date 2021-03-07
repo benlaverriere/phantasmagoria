@@ -11,13 +11,12 @@ function mapRGBToBlack(value, currentMinimum, currentMaximum, startColor) {
 function colorFalloff(coloredPoint, referencePoint) {
   const feather = 4 / 9; // higher = fuzzier (undefined at 0)
   const aperture = 2 / 5; // higher = wider
+  const aperturePower = 1 / (feather * 2); // aka (feather * 2)th root of squared distance
 
   // the farthest any hex can be from any point is to be in diagonally-opposed corners
   const maxDistance = pow(
-    (windowWidth * windowWidth + windowHeight * windowHeight) *
-      aperture *
-      aperture,
-    1 / (feather * 2) // aka (feather * 2)th root of squared distance
+    (windowWidth * windowWidth + windowHeight * windowHeight) * aperture,
+    aperturePower
   );
 
   const xdist = coloredPoint.x - referencePoint.x;
@@ -25,7 +24,7 @@ function colorFalloff(coloredPoint, referencePoint) {
   // without clamping to maxDistance, this can easily go to Infinity...or at least it doesn't look as pretty
   const actualDistance = min(
     maxDistance,
-    pow(xdist * xdist + ydist * ydist, 1 / (2 * feather))
+    pow(xdist * xdist + ydist * ydist, aperturePower)
   );
 
   return mapRGBToBlack(actualDistance, 0, maxDistance, coloredPoint.color);
@@ -87,7 +86,6 @@ class Hex {
   }
 
   draw(points) {
-    this.color = new FColor(0, 0, 0);
     const colors = [];
     for (i = 0; i < points.length; i++) {
       const c = colorFalloff(points[i], this);
