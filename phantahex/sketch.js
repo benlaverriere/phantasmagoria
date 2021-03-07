@@ -32,7 +32,20 @@ const bounceConfig = new Config({
   movementMode: MovementMode.HARD_WALLS,
   pointSpreadFactors: { x: 1, y: 1 },
 });
-const config = bounceConfig;
+const blueConfig = new Config({
+  background: new FColor(0, 0, 0),
+  colors: [
+    new FColor(115, 221, 2240),
+    new FColor(5, 99, 166),
+    new FColor(2, 74, 242),
+    new FColor(48, 33, 209),
+  ],
+  hexSize: 120,
+  aperture: 0.05,
+  feather: 2,
+});
+
+const config = blueConfig;
 
 let points = [];
 let hexes = [];

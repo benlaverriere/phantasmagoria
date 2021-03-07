@@ -61,9 +61,9 @@ function blendRGBs(startingColors) {
   let result = config.hexColor;
   for (i = 0; i < colors.length; i++) {
     const newColor = colors[i];
-    const newRed = result.r + newColor.r / colors.length;
-    const newGreen = result.g + newColor.g / colors.length;
-    const newBlue = result.b + newColor.b / colors.length;
+    const newRed = result.r + newColor.r;
+    const newGreen = result.g + newColor.g;
+    const newBlue = result.b + newColor.b;
     result = new FColor(newRed, newGreen, newBlue);
   }
   return result;
