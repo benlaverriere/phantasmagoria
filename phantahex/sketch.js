@@ -1,8 +1,9 @@
-const DEBUG = false;
+const DEBUG = true;
 
 const firstConfig = new Config({
   aperture: 1 / 5,
   background: "black",
+  blendMode: BlendMode.FRACTIONAL,
   colors: [
     new FColor(128, 0, 0),
     new FColor(0, 256, 0),
@@ -34,6 +35,7 @@ const bounceConfig = new Config({
 });
 const blueConfig = new Config({
   background: new FColor(0, 0, 0),
+  blendMode: BlendMode.ADD,
   colors: [
     new FColor(115, 221, 2240),
     new FColor(5, 99, 166),
@@ -43,6 +45,7 @@ const blueConfig = new Config({
   hexSize: 120,
   aperture: 0.05,
   feather: 2,
+  movementMode: MovementMode.WRAP,
 });
 const modConfig = new Config({
   background: new FColor(0, 0, 0),
@@ -76,7 +79,7 @@ const grayConfig = new Config({
   feather: 1,
 });
 
-const config = grayConfig;
+const config = blueConfig;
 
 let points = [];
 let hexes = [];

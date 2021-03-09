@@ -1,4 +1,4 @@
-const HEX_DEBUG_MODE = "none";
+const HEX_DEBUG_MODE = "color";
 
 function mapRGBToBackground(value, currentMinimum, currentMaximum, startColor) {
   const newRed = map(

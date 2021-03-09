@@ -4,7 +4,13 @@
   "main": "index.html",
   "author": "Ben LaVerriere",
   "license": "MIT",
+  "scripts": {
+    "start": "serve"
+  },
   "devDependencies": {
     "prettier": "2.2.1"
+  },
+  "dependencies": {
+    "serve": "^11.3.2"
   }
 }

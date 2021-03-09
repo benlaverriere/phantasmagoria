@@ -10,7 +10,9 @@ class FColor {
   }
 
   toString() {
-    return `(${this.r}, ${this.g}, ${this.b})`;
+    return `(${Math.round(this.r)}, ${Math.round(this.g)}, ${Math.round(
+      this.b
+    )})`;
   }
 
   p5() {
