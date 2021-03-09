@@ -1,4 +1,4 @@
-const DEBUG = true;
+const DEBUG = false;
 
 const firstConfig = new Config({
   aperture: 1 / 5,
@@ -36,6 +36,7 @@ const bounceConfig = new Config({
 const blueConfig = new Config({
   background: new FColor(0, 0, 0),
   blendMode: BlendMode.ADD,
+  colorListMultiplier: 3,
   colors: [
     new FColor(115, 221, 2240),
     new FColor(5, 99, 166),
@@ -45,7 +46,8 @@ const blueConfig = new Config({
   hexSize: 120,
   aperture: 0.05,
   feather: 2,
-  movementMode: MovementMode.WRAP,
+  pointSpreadFactors: { x: 2, y: 2 },
+  movementMode: MovementMode.WRAP_WITH_MARGIN,
 });
 const modConfig = new Config({
   background: new FColor(0, 0, 0),

@@ -29,6 +29,7 @@ class Config {
     background,
     biasColor,
     blendMode,
+    colorListMultiplier,
     colors,
     feather,
     hexColor,
@@ -42,7 +43,13 @@ class Config {
 
     this.biasColor = biasColor ?? new FColor(0, 0, 0);
     this.blendMode = blendMode ?? BlendMode.ADD;
-    this.colors = colors ?? [];
+
+    this.colorListMultiplier = colorListMultiplier ?? 1;
+    this.colors = [];
+    for (let i = 0; i < this.colorListMultiplier; i++) {
+      this.colors = this.colors.concat(colors ?? []);
+    }
+
     this.feather = feather ?? 0.1; // higher = fuzzier (undefined at 0)
     this.hexColor = hexColor ?? new FColor(0, 0, 0);
 
