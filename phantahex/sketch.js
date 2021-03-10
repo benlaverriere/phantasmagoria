@@ -1,9 +1,10 @@
 const DEBUG = false;
 
+const firstHexColor = new FColor(0, 10, 0);
 const firstConfig = new Config({
   aperture: 1 / 5,
   background: "black",
-  blendMode: BlendMode.FRACTIONAL,
+  blender: new FractionalBlender(firstHexColor),
   colors: [
     new FColor(128, 0, 0),
     new FColor(0, 256, 0),
@@ -13,11 +14,11 @@ const firstConfig = new Config({
     new FColor(240, 3, 252),
   ],
   feather: 2 / 9,
-  hexColor: new FColor(0, 10, 0),
   hexSize: 50,
   movementMode: MovementMode.WRAP_WITH_MARGIN,
   pointSpreadFactors: { x: 1, y: 1 },
 });
+
 const bounceConfig = new Config({
   aperture: 2 / 20,
   background: new FColor(0, 0, 0),
@@ -33,9 +34,10 @@ const bounceConfig = new Config({
   movementMode: MovementMode.HARD_WALLS,
   pointSpreadFactors: { x: 1, y: 1 },
 });
+
 const blueConfig = new Config({
   background: new FColor(0, 0, 0),
-  blendMode: BlendMode.ADD,
+  blender: new AdditiveBlender(),
   colorListMultiplier: 3,
   colors: [
     new FColor(115, 221, 2240),
@@ -49,9 +51,10 @@ const blueConfig = new Config({
   pointSpreadFactors: { x: 2, y: 2 },
   movementMode: MovementMode.WRAP_WITH_MARGIN,
 });
+
 const modConfig = new Config({
   background: new FColor(0, 0, 0),
-  blendMode: BlendMode.MODULO,
+  blender: new ModuloBlender(),
   movementMode: MovementMode.WRAP,
   colors: [
     new FColor(255, 0, 0),
@@ -65,10 +68,12 @@ const modConfig = new Config({
   aperture: 0.1,
   feather: 1,
 });
+
+const grayBaseColor = new FColor(0, 0, 0);
+const grayBiasColor = new FColor(128, 50, 0);
 const grayConfig = new Config({
   background: new FColor(0, 0, 0),
-  blendMode: BlendMode.BIASED_ADD,
-  biasColor: new FColor(128, 50, 0),
+  blender: new BiasedAdditiveBlender(grayBaseColor, grayBiasColor),
   movementMode: MovementMode.WRAP_WITH_MARGIN,
   colors: [
     new FColor(255, 255, 255),
@@ -81,12 +86,11 @@ const grayConfig = new Config({
   feather: 1,
 });
 
-const config = blueConfig;
+const config = firstConfig;
 
 let points = [];
 let hexes = [];
 let colors;
-let blender; // TODO move into config?
 
 let hexCountX;
 let hexCountY;
@@ -98,26 +102,6 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   lastWindowWidth = windowWidth;
   lastWindowHeight = windowHeight;
-
-  switch (config.blendMode) {
-    case BlendMode.MODULO: {
-      blender = new ModuloBlender(config);
-      break;
-    }
-    case BlendMode.FRACTIONAL: {
-      blender = new FractionalBlender(config);
-      break;
-    }
-    case BlendMode.BIASED_ADD: {
-      blender = new BiasedAdditiveBlender(config);
-      break;
-    }
-    case BlendMode.ADD:
-    default: {
-      blender = new AdditiveBlender(config);
-      break;
-    }
-  }
 
   const initialSpreadX = (config.pointSpreadFactors.x * windowWidth) / 2;
   const initialSpreadY = (config.pointSpreadFactors.y * windowHeight) / 2;
@@ -195,7 +179,7 @@ function resizeHexes() {
         x * config.hexSize * (sqrt(3) / 2),
         y * config.hexSize + verticalOffset,
         config.hexSize,
-        blender
+        config.blender
       );
       hexes[y].push(h);
     }

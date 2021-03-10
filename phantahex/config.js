@@ -28,7 +28,7 @@ class Config {
     aperture,
     background,
     biasColor,
-    blendMode,
+    blender,
     colorListMultiplier,
     colors,
     feather,
@@ -40,9 +40,10 @@ class Config {
     this.aperture = aperture ?? 0.5; // higher = wider
 
     this.background = parseBackground(background ?? new FColor(0, 0, 0));
+    this.hexColor = hexColor ?? new FColor(0, 0, 0);
 
     this.biasColor = biasColor ?? new FColor(0, 0, 0);
-    this.blendMode = blendMode ?? BlendMode.ADD;
+    this.blender = blender ?? new AdditiveBlender(this.hexColor);
 
     this.colorListMultiplier = colorListMultiplier ?? 1;
     this.colors = [];
@@ -51,7 +52,6 @@ class Config {
     }
 
     this.feather = feather ?? 0.1; // higher = fuzzier (undefined at 0)
-    this.hexColor = hexColor ?? new FColor(0, 0, 0);
 
     // TODO when hexes get large, wrapping gets jerky
     this.hexSize = hexSize ?? 100;

@@ -1,10 +1,10 @@
 class FractionalBlender {
-  constructor(config) {
-    this.config = config;
+  constructor(baseColor) {
+    this.baseColor = baseColor ?? new FColor(0, 0, 0);
   }
 
   blend(colors) {
-    let { r: newRed, g: newGreen, b: newBlue } = this.config.hexColor;
+    let { r: newRed, g: newGreen, b: newBlue } = this.baseColor;
     for (i = 0; i < colors.length; i++) {
       // Note: at one point, we were doing
       //   component = (component + new_component) / colors.length
