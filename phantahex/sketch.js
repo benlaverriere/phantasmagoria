@@ -86,6 +86,7 @@ const config = blueConfig;
 let points = [];
 let hexes = [];
 let colors;
+let blender; // TODO move into config?
 
 let hexCountX;
 let hexCountY;
@@ -97,6 +98,26 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   lastWindowWidth = windowWidth;
   lastWindowHeight = windowHeight;
+
+  switch (config.blendMode) {
+    case BlendMode.MODULO: {
+      blender = new ModuloBlender(config);
+      break;
+    }
+    case BlendMode.FRACTIONAL: {
+      blender = new FractionalBlender(config);
+      break;
+    }
+    case BlendMode.BIASED_ADD: {
+      blender = new BiasedAdditiveBlender(config);
+      break;
+    }
+    case BlendMode.ADD:
+    default: {
+      blender = new AdditiveBlender(config);
+      break;
+    }
+  }
 
   const initialSpreadX = (config.pointSpreadFactors.x * windowWidth) / 2;
   const initialSpreadY = (config.pointSpreadFactors.y * windowHeight) / 2;
@@ -173,7 +194,8 @@ function resizeHexes() {
       const h = new Hex(
         x * config.hexSize * (sqrt(3) / 2),
         y * config.hexSize + verticalOffset,
-        config.hexSize
+        config.hexSize,
+        blender
       );
       hexes[y].push(h);
     }
