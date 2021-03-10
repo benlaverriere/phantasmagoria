@@ -1,16 +1,3 @@
-const BlendMode = {
-  ADD: 0,
-  MODULO: 1,
-  FRACTIONAL: 2,
-  BIASED_ADD: 3,
-};
-
-const MovementMode = {
-  HARD_WALLS: 0,
-  WRAP: 1,
-  WRAP_WITH_MARGIN: 2,
-};
-
 // because we'll be passing this value to p5's background(), it needs to be a p5 Color
 function parseBackground(incoming) {
   if (incoming instanceof FColor) {
@@ -34,7 +21,6 @@ class Config {
     feather,
     hexColor,
     hexSize,
-    movementMode,
     pointFactory,
     pointSpreadFactors,
   }) {
@@ -57,7 +43,6 @@ class Config {
     // TODO when hexes get large, wrapping gets jerky
     this.hexSize = hexSize ?? 100;
 
-    this.movementMode = movementMode ?? MovementMode.HARD_WALLS;
     this.pointFactory = pointFactory ?? new BouncingPointFactory();
 
     this.pointSpreadFactors = pointSpreadFactors ?? { x: 1, y: 1 };

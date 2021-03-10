@@ -31,7 +31,6 @@ const bounceConfig = new Config({
   feather: 3 / 9,
   hexColor: new FColor(5, 5, 5),
   hexSize: 80,
-  movementMode: MovementMode.HARD_WALLS,
   pointFactory: new BouncingPointFactory(),
   pointSpreadFactors: { x: 1, y: 1 },
 });
@@ -56,7 +55,6 @@ const blueConfig = new Config({
 const modConfig = new Config({
   background: new FColor(0, 0, 0),
   blender: new ModuloBlender(),
-  movementMode: MovementMode.WRAP,
   colors: [
     new FColor(255, 0, 0),
     new FColor(0, 255, 0),
@@ -89,7 +87,6 @@ const grayConfig = new Config({
 
 const wrapConfig = new Config({
   background: new FColor(0, 0, 0),
-  movementMode: MovementMode.WRAP,
   pointFactory: new WrappingPointFactory(),
   colors: [new FColor(20, 128, 255)],
   hexSize: 50,
