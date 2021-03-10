@@ -15,7 +15,7 @@ class FColor {
     )})`;
   }
 
-  p5() {
-    return color(this.r, this.g, this.b);
+  p5(sketch) {
+    return sketch.color(this.r, this.g, this.b);
   }
 }

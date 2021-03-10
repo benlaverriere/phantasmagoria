@@ -1,32 +1,25 @@
-// because we'll be passing this value to p5's background(), it needs to be a p5 Color
-function parseBackground(incoming) {
-  if (incoming instanceof FColor) {
-    return incoming.p5();
-  } else {
-    const p = new p5(); // triggering "global mode" so we can use color()
-    const result = color(incoming);
-    delete p;
-    return result;
-  }
-}
-
 class Config {
-  constructor({
-    aperture,
-    background,
-    biasColor,
-    blender,
-    colorListMultiplier,
-    colors,
-    feather,
-    hexColor,
-    hexSize,
-    pointFactory,
-    pointSpreadFactors,
-  }) {
+  constructor(
+    sketch,
+    {
+      aperture,
+      background,
+      biasColor,
+      blender,
+      colorListMultiplier,
+      colors,
+      feather,
+      hexColor,
+      hexSize,
+      pointFactory,
+      pointSpreadFactors,
+    }
+  ) {
+    this.sketch = sketch;
+
     this.aperture = aperture ?? 0.5; // higher = wider
 
-    this.background = parseBackground(background ?? new FColor(0, 0, 0));
+    this.background = this.parseBackground(background ?? new FColor(0, 0, 0));
     this.hexColor = hexColor ?? new FColor(0, 0, 0);
 
     this.biasColor = biasColor ?? new FColor(0, 0, 0);
@@ -43,8 +36,19 @@ class Config {
     // TODO when hexes get large, wrapping gets jerky
     this.hexSize = hexSize ?? 100;
 
-    this.pointFactory = pointFactory ?? new BouncingPointFactory();
+    this.pointFactory =
+      pointFactory ??
+      new PointFactory(this.sketch, new BouncingPointMover(this.sketch));
 
     this.pointSpreadFactors = pointSpreadFactors ?? { x: 1, y: 1 };
+  }
+
+  // because we'll be passing this value to p5's background(), it needs to be a p5 Color
+  parseBackground(incoming) {
+    if (incoming instanceof FColor) {
+      return incoming.p5(this.sketch);
+    } else {
+      return this.sketch.color(incoming);
+    }
   }
 }
