@@ -15,7 +15,7 @@ const firstConfig = new Config({
   ],
   feather: 2 / 9,
   hexSize: 50,
-  movementMode: MovementMode.WRAP_WITH_MARGIN,
+  pointFactory: new MarginWrappingPointFactory(),
   pointSpreadFactors: { x: 1, y: 1 },
 });
 
@@ -32,6 +32,7 @@ const bounceConfig = new Config({
   hexColor: new FColor(5, 5, 5),
   hexSize: 80,
   movementMode: MovementMode.HARD_WALLS,
+  pointFactory: new BouncingPointFactory(),
   pointSpreadFactors: { x: 1, y: 1 },
 });
 
@@ -49,7 +50,7 @@ const blueConfig = new Config({
   aperture: 0.05,
   feather: 2,
   pointSpreadFactors: { x: 2, y: 2 },
-  movementMode: MovementMode.WRAP_WITH_MARGIN,
+  pointFactory: new MarginWrappingPointFactory(),
 });
 
 const modConfig = new Config({
@@ -74,7 +75,7 @@ const grayBiasColor = new FColor(128, 50, 0);
 const grayConfig = new Config({
   background: new FColor(0, 0, 0),
   blender: new BiasedAdditiveBlender(grayBaseColor, grayBiasColor),
-  movementMode: MovementMode.WRAP_WITH_MARGIN,
+  pointFactory: new MarginWrappingPointFactory(),
   colors: [
     new FColor(255, 255, 255),
     new FColor(255, 255, 255),
@@ -86,7 +87,17 @@ const grayConfig = new Config({
   feather: 1,
 });
 
-const config = firstConfig;
+const wrapConfig = new Config({
+  background: new FColor(0, 0, 0),
+  movementMode: MovementMode.WRAP,
+  pointFactory: new WrappingPointFactory(),
+  colors: [new FColor(20, 128, 255)],
+  hexSize: 50,
+  aperture: 0.01,
+  feather: 1,
+});
+
+const config = modConfig;
 
 let points = [];
 let hexes = [];
@@ -108,7 +119,7 @@ function setup() {
   points = [];
   for (i = 0; i < config.colors.length; i++) {
     points.push(
-      new Point(
+      config.pointFactory.build(
         initialSpreadX + random(-initialSpreadX, initialSpreadX),
         initialSpreadY + random(-initialSpreadY, initialSpreadY),
         config.colors[i]
@@ -189,7 +200,7 @@ function resizeHexes() {
 function resizePoints() {
   for (i = 0; i < points.length; i++) {
     const existing = points[i];
-    points[i] = new Point(
+    points[i] = config.pointFactory.build(
       (existing.x / lastWindowWidth) * windowWidth,
       (existing.y / lastWindowHeight) * windowHeight,
       existing.color

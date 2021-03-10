@@ -35,6 +35,7 @@ class Config {
     hexColor,
     hexSize,
     movementMode,
+    pointFactory,
     pointSpreadFactors,
   }) {
     this.aperture = aperture ?? 0.5; // higher = wider
@@ -57,6 +58,8 @@ class Config {
     this.hexSize = hexSize ?? 100;
 
     this.movementMode = movementMode ?? MovementMode.HARD_WALLS;
+    this.pointFactory = pointFactory ?? new BouncingPointFactory();
+
     this.pointSpreadFactors = pointSpreadFactors ?? { x: 1, y: 1 };
   }
 }
