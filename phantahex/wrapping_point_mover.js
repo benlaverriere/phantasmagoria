@@ -25,7 +25,7 @@ class WrappingPointMover {
       this.ydrift;
 
     if (this.sketch.DEBUG && this.debugMode === "increment") {
-      console.log(this.sketch.round(xinc), this.sketch.round(yinc));
+      console.log(Math.round(xinc), Math.round(yinc));
     }
 
     point.x =

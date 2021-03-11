@@ -161,7 +161,7 @@ let myp5 = new p5((sketch) => {
       sketch.fill("lightgray");
       sketch.textSize(20);
       sketch.textAlign(LEFT, CENTER);
-      sketch.text(sketch.round(sketch.frameRate(), 1), 10, 10);
+      sketch.text(Math.round(sketch.frameRate() * 10) / 10, 10, 10);
       sketch.pop();
     }
   };
@@ -197,7 +197,7 @@ let myp5 = new p5((sketch) => {
         const verticalOffset = (x % 2) * (config.hexSize / 2);
         const h = new Hex(
           sketch,
-          x * config.hexSize * (sketch.sqrt(3) / 2),
+          x * config.hexSize * (Math.sqrt(3) / 2),
           y * config.hexSize + verticalOffset,
           config.hexSize,
           config.blender,

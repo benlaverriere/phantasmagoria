@@ -25,7 +25,7 @@ class BouncingPointMover {
       this.ydrift;
 
     if (this.sketch.DEBUG && this.debugMode === "increment") {
-      console.log(this.sketch.round(xinc), this.sketch.round(yinc));
+      console.log(Math.round(xinc), Math.round(yinc));
     }
 
     const newX = point.x + xinc;
@@ -37,13 +37,7 @@ class BouncingPointMover {
       this.ydrift *= -1;
     }
 
-    point.x = this.sketch.max(
-      this.sketch.min(newX, this.sketch.windowWidth),
-      0
-    );
-    point.y = this.sketch.max(
-      this.sketch.min(newY, this.sketch.windowHeight),
-      0
-    );
+    point.x = Math.max(Math.min(newX, this.sketch.windowWidth), 0);
+    point.y = Math.max(Math.min(newY, this.sketch.windowHeight), 0);
   }
 }

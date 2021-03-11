@@ -17,7 +17,7 @@ class Hex {
     this.id = `(${Math.round(this.x)},${Math.round(this.y)})`;
 
     const heightFactor = 1;
-    const widthFactor = this.sketch.sqrt(3) / 2;
+    const widthFactor = Math.sqrt(3) / 2;
 
     this.top = this.x + this.radius * heightFactor;
     this.midtop = this.x + this.radius / 2;
@@ -110,7 +110,7 @@ class Hex {
     const aperturePower = 1 / (this.feather * 2); // aka (feather * 2)th root of squared distance
 
     // the farthest any hex can be from any point is to be in diagonally-opposed corners
-    const maxDistance = this.sketch.pow(
+    const maxDistance = Math.pow(
       (this.sketch.windowWidth * this.sketch.windowWidth +
         this.sketch.windowHeight * this.sketch.windowHeight) *
         this.aperture,
@@ -120,9 +120,9 @@ class Hex {
     const xdist = coloredPoint.x - referencePoint.x;
     const ydist = coloredPoint.y - referencePoint.y;
     // without clamping to maxDistance, this can easily go to Infinity...or at least it doesn't look as pretty
-    const actualDistance = this.sketch.min(
+    const actualDistance = Math.min(
       maxDistance,
-      this.sketch.pow(xdist * xdist + ydist * ydist, aperturePower)
+      Math.pow(xdist * xdist + ydist * ydist, aperturePower)
     );
 
     return this.mapRGBToBackground(

@@ -26,7 +26,7 @@ class MarginWrappingPointMover {
       this.ydrift;
 
     if (this.sketch.DEBUG && this.debugMode === "increment") {
-      console.log(this.sketch.round(xinc), this.sketch.round(yinc));
+      console.log(Math.round(xinc), Math.round(yinc));
     }
 
     // TODO it would be great to have a *second* copy of each point, offset by one window unit
@@ -39,8 +39,8 @@ class MarginWrappingPointMover {
     point.y = ((wrapHeight + point.y + yinc + yOffset) % wrapHeight) - yOffset;
     if (this.sketch.DEBUG && this.debugMode === "position") {
       console.log(
-        this.sketch.round(point.x),
-        this.sketch.round(point.y),
+        Math.round(point.x),
+        Math.round(point.y),
         "[",
         xOffset,
         yOffset,
